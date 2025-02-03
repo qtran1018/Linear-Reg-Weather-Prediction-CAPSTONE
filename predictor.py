@@ -244,6 +244,20 @@ def run_app():
                 temp_max.append(predicted_tmax2)
                 temp_min.append(predicted_tmin2)
 
+            # plt.plot(dates, temp_max, marker='o', label="Max Temp")
+            # plt.plot(dates, temp_min, marker='o', color='g', label="Min Temp")
+            # plt.xlabel = "Dates"
+            # plt.ylabel = "Temperature"
+            # plt.legend()
+            # #plt.gca().xaxis.set_major_locator(mdates.DayLocator(interval=5))
+            # plt.xticks([dates[0], dates[-1]], rotation=45)
+            # plt.gcf().autofmt_xdate()
+            # plt.show()
+
+            #else:
+             #   result_label2.config(text=f"The search limit is 180 days out. You input {day_diff}")
+
+            result_label2.config(text=f"Predicted Temp Max: {predicted_tmax2:.2f}\nPredicted Temp Min: {predicted_tmin2:.2f}\nPredicted Precip: {predicted_precip2:.2f}\nPredicted Snow: {predicted_snow2:.2f}\nPredicted Wind: {predicted_wind2:.2f}")
             plt.plot(dates, temp_max, marker='o', label="Max Temp")
             plt.plot(dates, temp_min, marker='o', color='g', label="Min Temp")
             plt.xlabel = "Dates"
@@ -253,11 +267,6 @@ def run_app():
             plt.xticks([dates[0], dates[-1]], rotation=45)
             plt.gcf().autofmt_xdate()
             plt.show()
-
-            #else:
-             #   result_label2.config(text=f"The search limit is 180 days out. You input {day_diff}")
-
-            result_label2.config(text=f"Predicted Temp Max: {predicted_tmax2:.2f}\nPredicted Temp Min: {predicted_tmin2:.2f}\nPredicted Precip: {predicted_precip2:.2f}\nPredicted Snow: {predicted_snow2:.2f}\nPredicted Wind: {predicted_wind2:.2f}")
         except Exception as e:
             result_label2.config(text='Error. Fill all fields and use numbers only.')
             print(e)

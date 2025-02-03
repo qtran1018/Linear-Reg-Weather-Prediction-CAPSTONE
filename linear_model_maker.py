@@ -1,13 +1,11 @@
 import pandas as pd 
-import numpy as np 
 from sklearn.model_selection import train_test_split 
 from sklearn.linear_model import LinearRegression 
 from sklearn.metrics import mean_squared_error
 from sklearn.multioutput import MultiOutputRegressor
-import open_save
 
-def make_model():
-    selected_file = open_save.open_file()
+def make_model(dataset):
+    selected_file = dataset
     data = pd.read_csv(selected_file)
     date_format = "%m/%d/%y"
     data['DATE'] = pd.to_datetime(data['DATE'], format=date_format)

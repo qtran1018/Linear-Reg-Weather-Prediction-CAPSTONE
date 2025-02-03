@@ -1,38 +1,52 @@
 import tkinter as tk
 from tkinter import filedialog
 
-def open_file():
+# def show_notification(title, message):
+#     notification.notify(
+#         title=title,
+#         message=message,
+#         app_name='My App',
+#         timeout=10  # Duration in seconds
+#     )
+
+def open_file_csv():
     # Create a Tk root widget
-    opener  = tk.Tk()
+    root = tk.Tk()
     # Hide the root window
-    opener.withdraw()
+    root.withdraw()
     # Open file dialog and get the file path
     file_path = filedialog.askopenfilename(
-        title="Select a file",
-        filetypes=(("CSV", "*.csv"), ("All files", "*.*"))
+        title = "Select a CSV file",
+        filetypes = (("CSV", "*.csv"),)
     )
     # Read and print the contents of the file (if needed)
     if file_path:
         print(file_path)
         return file_path 
 
-def save_file(b):
+def open_file_model():
+    # Create a Tk root widget
+    root = tk.Tk()
+    # Hide the root window
+    root.withdraw()
+    # Open file dialog and get the file path
+    file_path = filedialog.askopenfilename(
+        title = "Select a model file",
+        filetypes = (("PKL", "*.pkl"),)
+    )
+    # Read and print the contents of the file (if needed)
+    if file_path:
+        return file_path 
+
+def save_file():
     # Create a Tk root widget
     root = tk.Tk()
     # Hide the root window
     root.withdraw()
     # Open save file dialog and get the file path
-    file_path = filedialog.asksaveasfilename(
-        title="Save file as",
-        defaultextension=".pkl",
-        filetypes=(("Pickle files", "*.pkl"), ("All files", "*.*"))
+    folder_path = filedialog.askdirectory(
+        title = "Select a folder to save to",
     )
-    # Print the file path (for demonstration purposes)
-    print(f"File will be saved at: {file_path}")
-
     # Write content to the selected file (if needed)
-    if file_path:
-        with open(file_path, 'w') as file:
-            content = "Hello, this is a sample text to be saved in the file."
-            file.write(content)
-            print("File saved successfully.")
+    if folder_path:
+        return folder_path

@@ -1,7 +1,23 @@
 import linear_model_maker
 import joblib
+import os
+import tkinter as tk
+from tkinter import messagebox
 
-def export_model():
-    model = linear_model_maker.make_model()
-    joblib.dump(model,'testdump.pkl')
-export_model()
+def show_message():
+    # Create a Tk root widget
+    root = tk.Tk()
+    # Hide the root window
+    root.withdraw()
+    # Display a message box
+    messagebox.showinfo(
+        title="Information",
+        message="Model has been saved."
+    )
+
+def export_model(save_loc,data_loc):
+    location = save_loc
+    model = linear_model_maker.make_model(data_loc)
+    filepath = os.path.join(location,'weather_model.pkl')
+    joblib.dump(model,filepath)
+    show_message()
