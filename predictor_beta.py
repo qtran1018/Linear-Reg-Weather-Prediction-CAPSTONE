@@ -1,14 +1,17 @@
 import joblib
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.dates import date2num, num2date
+import numpy as np
 #import matplotlib.dates as mdates
-#import tkinter as tk
+import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from datetime import datetime, timedelta, date
 import open_save
 import export_model
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import messagebox
    
 def run_app():
 
@@ -43,7 +46,6 @@ def run_app():
             result_values.config(text=f"Predicted Temp Max: {predicted_tmax:.2f}\nPredicted Temp Min: {predicted_tmin:.2f}\nPredicted Precip: {predicted_precip:.2f}\nPredicted Snow: {predicted_snow:.2f}\nPredicted Wind: {predicted_wind:.2f}")
         except:
             result_values.config(text='Error. Fill all fields and use numbers only.')
-            print("Error")
 
     def on_predict_multi():
         try:
@@ -116,6 +118,43 @@ def run_app():
     def choose_model():
         choose_model_field.delete(0,END)
         choose_model_field.insert(END,open_save.open_file_model())
+
+    def graph_data():
+        df = pd.read_csv(data_loc_field.get())
+        # Convert the 'date' column to datetime objects
+        df['DATE'] = pd.to_datetime(df['DATE'])
+
+        #Get data for dates and temps
+        dates = date2num(df['DATE'])  # Convert datetime objects to numerical format
+        max_temps = df['TMAX']
+        min_temps = df['TMIN']
+
+        #Plot the values for TMAX
+        plt.plot(df['DATE'], max_temps, label='Max Temperature Data')
+        plt.plot(df['DATE'], min_temps, label='Min Temperature Data')
+
+        #Regression lines
+        slope_max, intercept_max = np.polyfit(dates, max_temps, 1)
+        regression_line_max = slope_max * dates + intercept_max
+        slope_min, intercept_min = np.polyfit(dates, min_temps, 1)
+        regression_line_min = slope_min * dates + intercept_min
+
+        regression_dates = num2date(dates)
+
+        # Plot the regression
+        plt.plot(regression_dates, regression_line_max, color='red', label='Max temp Regression Line')
+        plt.plot(regression_dates, regression_line_min, color='blue', label='Min temp Regression Line')
+        
+
+        # Add labels and title
+        plt.xlabel('Date')
+        plt.ylabel('Temperature (°F)')
+        plt.title('Temperature Data with Regression Line')
+        plt.legend()
+        plt.text(df['DATE'].iloc[1], regression_line_max[1], f'Slope: {slope_max:.2f}', color='red')
+        plt.text(df['DATE'].iloc[1], regression_line_min[1], f'Slope: {slope_min:.2f}', color='blue')
+        # Show the plot
+        plt.show()
 #------------------------------------------------------------------------------------------------
 # region MAIN_WINDOW
     #Make the window
@@ -177,9 +216,13 @@ def run_app():
         data_loc_field.insert(END,open_save.open_file_csv())
     #Creates the datasets. Location info --> Export Model.py --> Model Maker.py --> Export Model.py dump
     def create_model():
-        save_spot = save_loc_field.get()
-        data_spot = data_loc_field.get()
-        export_model.export_model(save_spot,data_spot)
+        try:
+            save_spot = save_loc_field.get()
+            data_spot = data_loc_field.get()
+            export_model.export_model(save_spot,data_spot)
+        except Exception as e:
+            export_model.show_message(e)
+
 #------------------------------------------------------------------------------------------------
     #Get location to save model to
     ttk.Label(frame_model_maker, text="Save model to:").grid(row=0,column=0,padx=10,pady=5)
@@ -196,8 +239,11 @@ def run_app():
 
     data_loc_btn = ttk.Button(frame_model_maker, text="Select dataset", command=change_file_loc)
     data_loc_btn.grid(row=1,column=2,padx=10,pady=5)
+    
+    plot_data_btn = ttk.Button(frame_model_maker, text="Graph data", command=graph_data)
+    plot_data_btn.grid(row=1,column=3,padx=10,pady=5)
 
-    #Create the mode.
+    #Create the model.
     create_model_btn = ttk.Button(frame_model_maker,text="Make the model", command=create_model)
     create_model_btn.grid(row=2,column=1,padx=10,pady=5)
 # endregion MODEL_MAKER
