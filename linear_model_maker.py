@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression 
 from sklearn.metrics import mean_squared_error
 from sklearn.multioutput import MultiOutputRegressor
+import export_model
 
 def make_model(dataset):
     selected_file = dataset
@@ -46,4 +47,12 @@ def make_model(dataset):
     print('Mean Squared Error for precipitation:', mse_prcp)
     print('Mean Squared Error for snow:', mse_snow)
     print('Mean Squared Error for wind:', mse_awnd)
+    
+    export_model.show_message(
+        f"Mean Squared Error for max temp: {mse_tmax:.2f}\n"
+        f"Mean Squared Error for min temp: {mse_tmin:.2f}\n"
+        f"Mean Squared Error for precipitation: {mse_prcp:.2f}\n"
+        f"Mean Squared Error for snow: {mse_awnd:.2f}\n"
+        f"Mean Squared Error for wind: {mse_awnd:.2f}"
+    )
     return model
